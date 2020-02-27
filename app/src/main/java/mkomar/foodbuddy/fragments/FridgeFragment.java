@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,8 +32,13 @@ public class FridgeFragment extends Fragment implements UpdateQuantityDialog.Upd
     @BindView(R.id.user_products_recycler_view)
     RecyclerView userProductsRecyclerView;
 
+    @BindView(R.id.add_product_button)
+    FloatingActionButton addProductButton;
+
     private UserProductsService userProductsService;
+
     private ProductsAdapter productsAdapter;
+    private DividerItemDecoration dividerItemDecoration;
 
     @Nullable
     @Override
@@ -39,12 +46,24 @@ public class FridgeFragment extends Fragment implements UpdateQuantityDialog.Upd
         View view = inflater.inflate(R.layout.fragment_fridge, container, false);
         ButterKnife.bind(this, view);
 
+        addProductButton.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Add product", Toast.LENGTH_LONG).show();
+        });
+
+        if (savedInstanceState != null && productsAdapter != null && dividerItemDecoration != null) {
+            userProductsRecyclerView.setAdapter(productsAdapter);
+            userProductsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            userProductsRecyclerView.addItemDecoration(dividerItemDecoration);
+        }
+
         return view;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setRetainInstance(true);
+
         if (this.getActivity() != null) {
             this.getActivity().setTitle("Your fridge");
         }
@@ -89,13 +108,12 @@ public class FridgeFragment extends Fragment implements UpdateQuantityDialog.Upd
             if (userProducts != null) {
                 productsAdapter = new ProductsAdapter(userProducts, getParentFragmentManager(),
                         FridgeFragment.this);
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
                 userProductsRecyclerView.setAdapter(productsAdapter);
-                userProductsRecyclerView.setLayoutManager(layoutManager);
+                userProductsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-                        userProductsRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+                dividerItemDecoration = new DividerItemDecoration(userProductsRecyclerView.getContext(),
+                        DividerItemDecoration.VERTICAL);
                 userProductsRecyclerView.addItemDecoration(dividerItemDecoration);
             } else {
                 Toast.makeText(getActivity(), "No data loaded", Toast.LENGTH_SHORT).show();

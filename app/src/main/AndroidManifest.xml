@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme"
         android:networkSecurityConfig="@xml/network_security_config">
         <activity android:name=".activities.FoodbuddyActivity"></activity>
-        <activity android:name=".activities.MainMenuActivity" />
+        <activity android:name=".activities.MainMenuActivity"/>
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

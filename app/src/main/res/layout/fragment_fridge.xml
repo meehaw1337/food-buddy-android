@@ -11,14 +11,14 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_product_button"
-        android:backgroundTint="@color/primaryColor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:clickable="true"
-        android:focusable="true"
-        app:srcCompat="@android:drawable/ic_input_add"
         android:layout_margin="16dp"
+        android:backgroundTint="@color/primaryColor"
+        android:clickable="true"
         android:elevation="6dp"
-        app:borderWidth="0dp"/>
+        android:focusable="true"
+        app:borderWidth="0dp"
+        app:srcCompat="@android:drawable/ic_input_add" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

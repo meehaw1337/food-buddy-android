@@ -47,7 +47,7 @@ public class MainMenuActivity extends FoodbuddyActivity implements NavigationVie
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new FridgeFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_recipes);
+            navigationView.setCheckedItem(R.id.nav_fridge);
         }
 
         navigationView.setNavigationItemSelectedListener(this);

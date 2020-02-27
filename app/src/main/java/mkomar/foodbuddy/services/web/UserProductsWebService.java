@@ -33,7 +33,7 @@ public class UserProductsWebService implements UserProductsService {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.114:3000")
+                .baseUrl("http://192.168.1.5:3000")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient)
                 .build();
