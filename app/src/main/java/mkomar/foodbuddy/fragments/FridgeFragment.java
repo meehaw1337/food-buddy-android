@@ -1,5 +1,6 @@
 package mkomar.foodbuddy.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mkomar.foodbuddy.R;
+import mkomar.foodbuddy.activities.AddProductsActivity;
 import mkomar.foodbuddy.adapters.ProductsAdapter;
 import mkomar.foodbuddy.dialogs.UpdateQuantityDialog;
 import mkomar.foodbuddy.model.UserProduct;
@@ -47,7 +49,9 @@ public class FridgeFragment extends Fragment implements UpdateQuantityDialog.Upd
         ButterKnife.bind(this, view);
 
         addProductButton.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Add product", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this.getActivity(), AddProductsActivity.class);
+
+            startActivity(intent);
         });
 
         if (savedInstanceState != null && productsAdapter != null && dividerItemDecoration != null) {
@@ -115,8 +119,6 @@ public class FridgeFragment extends Fragment implements UpdateQuantityDialog.Upd
                 dividerItemDecoration = new DividerItemDecoration(userProductsRecyclerView.getContext(),
                         DividerItemDecoration.VERTICAL);
                 userProductsRecyclerView.addItemDecoration(dividerItemDecoration);
-            } else {
-                Toast.makeText(getActivity(), "No data loaded", Toast.LENGTH_SHORT).show();
             }
         }
     }

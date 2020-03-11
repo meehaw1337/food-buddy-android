@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView3"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/recipe_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/suggested_recipes"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"/>
+        android:background="@color/primaryColor"
+        app:tabSelectedTextColor="#FFFFFF"
+        app:tabIndicatorColor="@color/primaryLightColor"
+        app:tabBackground="?attr/selectableItemBackground"/>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/recipes_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

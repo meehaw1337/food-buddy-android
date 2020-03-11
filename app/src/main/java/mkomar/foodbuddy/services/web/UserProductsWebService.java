@@ -55,7 +55,7 @@ public class UserProductsWebService implements UserProductsService {
     @Override
     public void updateUsersProductQuantity(Long userId, Long userProductId, Long updatedQuantity) {
         try {
-            foodbuddyAPI.updateUsersProductQuantity(userId, userProductId, updatedQuantity).execute().body();
+            foodbuddyAPI.updateUsersProductQuantity(userId, userProductId, updatedQuantity).execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
