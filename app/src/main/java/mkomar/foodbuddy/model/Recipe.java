@@ -3,23 +3,27 @@ package mkomar.foodbuddy.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Product {
+public class Recipe {
 
     private Long id;
 
     private String name;
 
-    private Category category;
+    private String description;
+
+    private Long calories;
 
     private String imageUrl;
 
-    public Product() {
+    public Recipe() {
     }
 
-    public Product(Long id, String name, Category category) {
+    public Recipe(Long id, String name, String description, Long calories, String imageUrl) {
         this.id = id;
         this.name = name;
-        this.category = category;
+        this.description = description;
+        this.calories = calories;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -38,12 +42,20 @@ public class Product {
         this.name = name;
     }
 
-    public Category getCategory() {
-        return category;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getCalories() {
+        return calories;
+    }
+
+    public void setCalories(Long calories) {
+        this.calories = calories;
     }
 
     public String getImageUrl() {

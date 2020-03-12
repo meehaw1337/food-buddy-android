@@ -5,6 +5,7 @@ import java.util.List;
 
 import mkomar.foodbuddy.model.Category;
 import mkomar.foodbuddy.model.Product;
+import mkomar.foodbuddy.model.Recipe;
 import mkomar.foodbuddy.model.UserProduct;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -27,4 +28,7 @@ public interface FoodbuddyAPI {
 
     @GET("/categories/")
     Call<List<Category>> getProductCategories();
+
+    @GET("/recipes/")
+    Call<List<Recipe>> getRecipes();
 }

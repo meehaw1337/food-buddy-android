@@ -22,5 +22,9 @@ public class MealPlanFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getActivity() != null) {
+            getActivity().setTitle("Meal plan");
+        }
     }
 }

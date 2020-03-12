@@ -12,6 +12,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -19,20 +21,16 @@ import butterknife.ButterKnife;
 import mkomar.foodbuddy.R;
 import mkomar.foodbuddy.dialogs.UpdateQuantityDialog;
 import mkomar.foodbuddy.model.UserProduct;
-import mkomar.foodbuddy.services.interfaces.ProductImageService;
-import mkomar.foodbuddy.services.local.ProductImageLocalService;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductViewHolder> {
 
     private List<UserProduct> products;
-    private ProductImageService productImageService;
     private FragmentManager fragmentManager;
     private UpdateQuantityDialog.UpdateQuantityDialogListener listener;
 
     public ProductsAdapter(List<UserProduct> products, FragmentManager fragmentManager,
                            UpdateQuantityDialog.UpdateQuantityDialogListener listener) {
         this.products = products;
-        productImageService = new ProductImageLocalService();
         this.fragmentManager = fragmentManager;
         this.listener = listener;
     }
@@ -43,9 +41,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View contactView = inflater.inflate(R.layout.item_product, parent, false);
+        View view = inflater.inflate(R.layout.item_product, parent, false);
 
-        return new ProductViewHolder(contactView);
+        return new ProductViewHolder(view);
     }
 
     @Override
@@ -61,14 +59,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             quantityText = quantityText + "s";
         }
 
-        Integer productImageId = productImageService.getImageId(userProduct.getProduct().getName());
-
         holder.productNameTextView.setText(userProduct.getProduct().getName());
         holder.productQuantityTextView.setText(quantityText);
         holder.productCategoryTextView.setText(userProduct.getProduct().getCategory().getName());
-        if (productImageId != null) {
-            holder.productImageView.setImageResource(productImageId);
-        }
+        Picasso.get().load(userProduct.getProduct().getImageUrl()).into(holder.productImageView);
     }
 
 

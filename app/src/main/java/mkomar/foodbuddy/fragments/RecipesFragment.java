@@ -41,5 +41,9 @@ public class RecipesFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getActivity() != null) {
+            getActivity().setTitle("Recipes");
+        }
     }
 }

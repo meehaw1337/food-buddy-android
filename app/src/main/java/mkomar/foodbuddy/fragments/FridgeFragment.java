@@ -1,12 +1,10 @@
 package mkomar.foodbuddy.fragments;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,8 +24,11 @@ import mkomar.foodbuddy.activities.AddProductsActivity;
 import mkomar.foodbuddy.adapters.ProductsAdapter;
 import mkomar.foodbuddy.dialogs.UpdateQuantityDialog;
 import mkomar.foodbuddy.model.UserProduct;
-import mkomar.foodbuddy.services.interfaces.UserProductsService;
-import mkomar.foodbuddy.services.web.UserProductsWebService;
+import mkomar.foodbuddy.services.FoodbuddyAPI;
+import mkomar.foodbuddy.services.web.FoodbuddyAPIProvider;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FridgeFragment extends Fragment implements UpdateQuantityDialog.UpdateQuantityDialogListener {
 
@@ -37,7 +38,7 @@ public class FridgeFragment extends Fragment implements UpdateQuantityDialog.Upd
     @BindView(R.id.add_product_button)
     FloatingActionButton addProductButton;
 
-    private UserProductsService userProductsService;
+    private FoodbuddyAPI foodbuddyAPI;
 
     private ProductsAdapter productsAdapter;
     private DividerItemDecoration dividerItemDecoration;
@@ -48,8 +49,12 @@ public class FridgeFragment extends Fragment implements UpdateQuantityDialog.Upd
         View view = inflater.inflate(R.layout.fragment_fridge, container, false);
         ButterKnife.bind(this, view);
 
+        if (getActivity() != null) {
+            getActivity().setTitle("Your fridge");
+        }
+
         addProductButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this.getActivity(), AddProductsActivity.class);
+            Intent intent = new Intent(getActivity(), AddProductsActivity.class);
 
             startActivity(intent);
         });
@@ -58,6 +63,33 @@ public class FridgeFragment extends Fragment implements UpdateQuantityDialog.Upd
             userProductsRecyclerView.setAdapter(productsAdapter);
             userProductsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             userProductsRecyclerView.addItemDecoration(dividerItemDecoration);
+        } else {
+            foodbuddyAPI = FoodbuddyAPIProvider.get();
+
+            // TODO remove hardcoded user id
+            foodbuddyAPI.getUsersProducts(1L).enqueue(new Callback<List<UserProduct>>() {
+                @Override
+                public void onResponse(Call<List<UserProduct>> call, Response<List<UserProduct>> response) {
+                    List<UserProduct> userProducts = response.body();
+
+                    if (userProducts != null) {
+                        productsAdapter = new ProductsAdapter(userProducts, getParentFragmentManager(),
+                                FridgeFragment.this);
+
+                        userProductsRecyclerView.setAdapter(productsAdapter);
+                        userProductsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+                        dividerItemDecoration = new DividerItemDecoration(userProductsRecyclerView.getContext(),
+                                DividerItemDecoration.VERTICAL);
+                        userProductsRecyclerView.addItemDecoration(dividerItemDecoration);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<UserProduct>> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
         }
 
         return view;
@@ -66,31 +98,31 @@ public class FridgeFragment extends Fragment implements UpdateQuantityDialog.Upd
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setRetainInstance(true);
-
-        if (this.getActivity() != null) {
-            this.getActivity().setTitle("Your fridge");
-        }
-
-        this.userProductsService = UserProductsWebService.getUserProductsWebProvider();
-        new GetUserProductsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        setRetainInstance(true);
     }
 
     @Override
     public void onPositiveClick(UpdateQuantityDialog dialog, UserProduct userProduct) {
         Long updatedQuantity = Long.parseLong(dialog.getQuantityEditText().getText().toString());
 
-        if (updatedQuantity > 0) {
-            userProduct.setQuantity(updatedQuantity);
-            productsAdapter.notifyDataSetChanged();
-        } else {
-            productsAdapter.removeProduct(userProduct);
-        }
+        foodbuddyAPI.updateUsersProductQuantity(userProduct.getUserId(), userProduct.getProduct().getId(), updatedQuantity).enqueue(
+                new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (updatedQuantity > 0) {
+                            userProduct.setQuantity(updatedQuantity);
+                            productsAdapter.notifyDataSetChanged();
+                        } else {
+                            productsAdapter.removeProduct(userProduct);
+                        }
+                    }
 
-        new UpdateUsersProductQuantityTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                userProduct.getUserId(),
-                userProduct.getId(),
-                updatedQuantity);
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+        );
 
         dialog.dismiss();
     }
@@ -98,37 +130,5 @@ public class FridgeFragment extends Fragment implements UpdateQuantityDialog.Upd
     @Override
     public void onNegativeClick(UpdateQuantityDialog dialog, UserProduct userProduct) {
         dialog.dismiss();
-    }
-
-    private class GetUserProductsTask extends AsyncTask<Long, Void, List<UserProduct>> {
-
-        @Override
-        protected List<UserProduct> doInBackground(Long... longs) {
-            return userProductsService.getUsersProducts(1L);
-        }
-
-        @Override
-        protected void onPostExecute(List<UserProduct> userProducts) {
-            if (userProducts != null) {
-                productsAdapter = new ProductsAdapter(userProducts, getParentFragmentManager(),
-                        FridgeFragment.this);
-
-                userProductsRecyclerView.setAdapter(productsAdapter);
-                userProductsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-                dividerItemDecoration = new DividerItemDecoration(userProductsRecyclerView.getContext(),
-                        DividerItemDecoration.VERTICAL);
-                userProductsRecyclerView.addItemDecoration(dividerItemDecoration);
-            }
-        }
-    }
-
-    private class UpdateUsersProductQuantityTask extends AsyncTask <Long, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Long... longs) {
-            userProductsService.updateUsersProductQuantity(longs[0], longs[1], longs[2]);
-            return null;
-        }
     }
 }
