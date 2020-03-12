@@ -23,6 +23,9 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
 
     private List<Recipe> recipes;
 
+    public static final int IMAGE_HEIGHT = 56;
+    public static final int IMAGE_WIDTH = 100;
+
     public RecipeRecyclerViewAdapter(List<Recipe> recipes) {
         this.recipes = recipes;
     }
@@ -44,7 +47,7 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
 
         holder.recipeNameTextView.setText(recipe.getName());
         holder.recipeDescriptionTextView.setText(recipe.getDescription());
-        Picasso.get().load(recipe.getImageUrl()).into(holder.recipeImageView);
+        Picasso.get().load(recipe.getImageUrl()).resize(IMAGE_WIDTH, IMAGE_HEIGHT).into(holder.recipeImageView);
     }
 
     @Override
