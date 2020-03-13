@@ -6,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -24,7 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AllRecipesFragment extends Fragment {
+public class AllRecipesFragment extends RecipesViewPagerFragment {
 
     @BindView(R.id.all_recipes_recycler_view)
     RecyclerView recipesRecyclerView;
@@ -44,9 +42,7 @@ public class AllRecipesFragment extends Fragment {
         foodbuddyAPI = FoodbuddyAPIProvider.get();
 
         if (savedInstanceState != null && adapter != null && dividerItemDecoration != null) {
-            recipesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recipesRecyclerView.setAdapter(adapter);
-            recipesRecyclerView.addItemDecoration(dividerItemDecoration);
+            super.refreshRecyclerView(recipesRecyclerView, adapter, dividerItemDecoration);
         } else {
             foodbuddyAPI.getRecipes().enqueue(new Callback<List<Recipe>>() {
                 @Override
@@ -55,9 +51,7 @@ public class AllRecipesFragment extends Fragment {
                     dividerItemDecoration = new DividerItemDecoration(recipesRecyclerView.getContext(),
                             DividerItemDecoration.VERTICAL);
 
-                    recipesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    recipesRecyclerView.setAdapter(adapter);
-                    recipesRecyclerView.addItemDecoration(dividerItemDecoration);
+                    AllRecipesFragment.super.refreshRecyclerView(recipesRecyclerView, adapter, dividerItemDecoration);
                 }
 
                 @Override

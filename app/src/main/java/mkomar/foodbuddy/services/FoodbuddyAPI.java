@@ -31,4 +31,10 @@ public interface FoodbuddyAPI {
 
     @GET("/recipes/")
     Call<List<Recipe>> getRecipes();
+
+    @GET("/users/{user_id}/recipes/available/")
+    Call<List<Recipe>> getUsersAvailableRecipes(@Path("user_id") Long userId);
+
+    @GET("/users/{user_id}/recipes/favourite/")
+    Call<List<Recipe>> getUsersFavouriteRecipes(@Path("user_id") Long userId);
 }
