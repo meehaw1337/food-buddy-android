@@ -7,8 +7,11 @@ import mkomar.foodbuddy.model.Category;
 import mkomar.foodbuddy.model.Product;
 import mkomar.foodbuddy.model.Recipe;
 import mkomar.foodbuddy.model.UserProduct;
+import mkomar.foodbuddy.model.UserRecipe;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -36,5 +39,11 @@ public interface FoodbuddyAPI {
     Call<List<Recipe>> getUsersAvailableRecipes(@Path("user_id") Long userId);
 
     @GET("/users/{user_id}/recipes/favourite/")
-    Call<List<Recipe>> getUsersFavouriteRecipes(@Path("user_id") Long userId);
+    Call<List<UserRecipe>> getUsersFavouriteRecipes(@Path("user_id") Long userId);
+
+    @POST("/users/{user_id}/recipes/favourite/")
+    Call<Void> addRecipeToFavourites(@Path("user_id") Long userId, @Query("recipeId") Long recipeId);
+
+    @DELETE("/users/{user_id}/recipes/favourite/")
+    Call<Void> removeRecipeFromFavourites(@Path("user_id") Long userId, @Query("recipeId") Long recipeId);
 }

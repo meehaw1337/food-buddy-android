@@ -44,6 +44,7 @@ public class AllRecipesFragment extends RecipesViewPagerFragment {
         if (savedInstanceState != null && adapter != null && dividerItemDecoration != null) {
             super.refreshRecyclerView(recipesRecyclerView, adapter, dividerItemDecoration);
         } else {
+            // TODO remove hardcoded user ID
             foodbuddyAPI.getRecipes().enqueue(new Callback<List<Recipe>>() {
                 @Override
                 public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {

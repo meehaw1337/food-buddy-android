@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mkomar.foodbuddy.R;
 import mkomar.foodbuddy.adapters.RecipeRecyclerViewAdapter;
-import mkomar.foodbuddy.model.Recipe;
+import mkomar.foodbuddy.model.UserRecipe;
 import mkomar.foodbuddy.services.FoodbuddyAPI;
 import mkomar.foodbuddy.services.web.FoodbuddyAPIProvider;
 import retrofit2.Call;
@@ -45,18 +46,22 @@ public class FavouriteRecipesFragment extends RecipesViewPagerFragment {
             super.refreshRecyclerView(recipesRecyclerView, adapter, dividerItemDecoration);
         } else {
             // TODO remove hardcoded user ID
-            foodbuddyAPI.getUsersFavouriteRecipes(1L).enqueue(new Callback<List<Recipe>>() {
+            foodbuddyAPI.getUsersFavouriteRecipes(1L).enqueue(new Callback<List<UserRecipe>>() {
                 @Override
-                public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                    adapter = new RecipeRecyclerViewAdapter(response.body());
-                    dividerItemDecoration = new DividerItemDecoration(recipesRecyclerView.getContext(),
-                            DividerItemDecoration.VERTICAL);
+                public void onResponse(Call<List<UserRecipe>> call, Response<List<UserRecipe>> response) {
+                    if (response.body() != null) {
+                        adapter = new RecipeRecyclerViewAdapter(response.body().stream().map(UserRecipe::getRecipe)
+                                .collect(Collectors.toList()));
 
-                    FavouriteRecipesFragment.super.refreshRecyclerView(recipesRecyclerView, adapter, dividerItemDecoration);
+                        dividerItemDecoration = new DividerItemDecoration(recipesRecyclerView.getContext(),
+                                DividerItemDecoration.VERTICAL);
+
+                        FavouriteRecipesFragment.super.refreshRecyclerView(recipesRecyclerView, adapter, dividerItemDecoration);
+                    }
                 }
 
                 @Override
-                public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                public void onFailure(Call<List<UserRecipe>> call, Throwable t) {
                     t.printStackTrace();
                 }
             });

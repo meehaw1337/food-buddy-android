@@ -13,10 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/FoodBuddyTheme">
-        <activity android:name=".activities.AddProductsActivity"></activity>
+        <activity android:name=".activities.RecipeDetailsActivity"></activity>
+        <activity android:name=".activities.AddProductsActivity" />
         <activity android:name=".activities.FoodbuddyActivity" />
-        <activity android:name=".activities.MainMenuActivity"
-            android:theme="@style/FoodBuddyTheme.NoActionBar"/>
+        <activity
+            android:name=".activities.MainMenuActivity"
+            android:theme="@style/FoodBuddyTheme.NoActionBar" />
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,6 +1,7 @@
 package mkomar.foodbuddy.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mkomar.foodbuddy.R;
+import mkomar.foodbuddy.activities.RecipeDetailsActivity;
 import mkomar.foodbuddy.model.Recipe;
 
 public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecyclerViewAdapter.RecipeViewHolder> {
@@ -47,6 +49,7 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
 
         holder.recipeNameTextView.setText(recipe.getName());
         holder.recipeDescriptionTextView.setText(recipe.getDescription());
+        holder.recipe = recipe;
         Picasso.get().load(recipe.getImageUrl()).resize(IMAGE_WIDTH, IMAGE_HEIGHT).into(holder.recipeImageView);
     }
 
@@ -66,11 +69,24 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
         @BindView(R.id.recipe_image)
         ImageView recipeImageView;
 
+        private Recipe recipe;
 
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(itemView.getContext(), RecipeDetailsActivity.class);
+
+                intent.putExtra("name", recipe.getName());
+                intent.putExtra("description", recipe.getDescription());
+                intent.putExtra("id", recipe.getId());
+                intent.putExtra("calories", recipe.getCalories());
+                intent.putExtra("image_url", recipe.getImageUrl());
+
+                itemView.getContext().startActivity(intent);
+            });
         }
     }
 }

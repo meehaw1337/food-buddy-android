@@ -1,10 +1,9 @@
 package mkomar.foodbuddy.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import mkomar.foodbuddy.R;
 
@@ -18,7 +17,6 @@ public class AddProductsActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
 
     }
 
